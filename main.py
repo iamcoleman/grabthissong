@@ -1,11 +1,9 @@
 # Python
-import pprint
-import sys
+import json
 # Libraries
 import tweepy
 import spotipy
 import spotipy.util as util
-from spotipy.oauth2 import SpotifyClientCredentials
 # Files
 from API.twitter_keys import getKeys
 
@@ -20,12 +18,21 @@ GTS = tweepy.API(auth)
 #############
 ## Spotipy ##
 #############
-client_credentials_manager = SpotifyClientCredentials()
-sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+client_id = '49ff0f2a990a4af2886eda66daeca7cf'
+client_secret = 'afc1335ebccc432381bd68acad5a7994'
 
-search_str = 'Muse'
-result = sp.search(search_str)
-pprint.pprint(result)
+token = util.oauth2.SpotifyClientCredentials(client_id, client_secret)
+cache_token = token.get_access_token()
+spotify = spotipy.Spotify(cache_token)
+
+tids = []
+track_list = []
+artist_list = ['Taylor Swift','Linkin Park','Charlie Puth']
+for artist in artist_list:
+   print(artist)
+   results = spotify.search(q=artist,limit = 50)
+   for i, t in enumerate(results['tracks']['items']):
+      tids.append(t['uri'])
 
 
 """
