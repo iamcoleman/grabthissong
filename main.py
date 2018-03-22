@@ -1,8 +1,10 @@
 # Python
 import json
+import pprint
 # Libraries
 import tweepy
 import spotipy
+import spotipy.oauth2 as oauth2
 import spotipy.util as util
 # Files
 from API.twitter_keys import getKeys
@@ -18,21 +20,36 @@ GTS = tweepy.API(auth)
 #############
 ## Spotipy ##
 #############
+username = '12156140455'
+scope = ''
 client_id = '49ff0f2a990a4af2886eda66daeca7cf'
 client_secret = 'afc1335ebccc432381bd68acad5a7994'
+redirect_uri = 'http://localhost/'
 
+"""
+# util method
+# used for getting personal info
+token = util.prompt_for_user_token(
+        username=username,
+        scope=scope,
+        client_id=client_id,
+        client_secret=client_secret,
+        redirect_uri=redirect_uri)
+
+spotify = spotipy.Spotify(auth=token)
+
+result = spotify.search('eminem')
+pprint.pprint(result)
+"""
+
+
+
+# oauth2 method
 token = util.oauth2.SpotifyClientCredentials(client_id, client_secret)
 cache_token = token.get_access_token()
 spotify = spotipy.Spotify(cache_token)
 
-tids = []
-track_list = []
-artist_list = ['Taylor Swift','Linkin Park','Charlie Puth']
-for artist in artist_list:
-   print(artist)
-   results = spotify.search(q=artist,limit = 50)
-   for i, t in enumerate(results['tracks']['items']):
-      tids.append(t['uri'])
+
 
 
 """
