@@ -35,24 +35,24 @@ token = util.prompt_for_user_token(
         client_id=client_id,
         client_secret=client_secret,
         redirect_uri=redirect_uri)
-
 spotify = spotipy.Spotify(auth=token)
-
 result = spotify.search('eminem')
 pprint.pprint(result)
 """
-
-
 
 # oauth2 method
 token = util.oauth2.SpotifyClientCredentials(client_id, client_secret)
 cache_token = token.get_access_token()
 spotify = spotipy.Spotify(cache_token)
 
+results = spotify.search(q='king troup', type='track')
+print(results['tracks'].href)
 
 
+#######################
+## Twitter Functions ##
+#######################
 
-"""
 def reply(body, status):
 	user = status.author.screen_name
 	reply_id = status.id
@@ -62,8 +62,7 @@ def reply(body, status):
 	print("Reply:")
 	print(reply)
 
-
-
+"""
 ###########################
 ## STEAMING THE TIMELINE ##
 ###########################
