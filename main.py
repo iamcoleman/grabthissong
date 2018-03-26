@@ -1,6 +1,8 @@
 # Python
 import json
 import pprint
+import string
+import random
 # Libraries
 import tweepy
 import spotipy
@@ -52,18 +54,26 @@ spotify = spotipy.Spotify(cache_token)
 
 def searchForTrack(songName):
     results = spotify.search(q=songName, type='track')
-    searchSongName = results['tracks']['items'][0]['name']
-    #pprint.pprint('Name: ' + searchSongName)
-    searchSongURL = results['tracks']['items'][0]['external_urls']['spotify']
-    #pprint.pprint('URL: ' + searchSongURL)
+    if results['tracks']['items']:
+        searchSongName = results['tracks']['items'][0]['name']
+        #pprint.pprint('Name: ' + searchSongName)
+        searchSongURL = results['tracks']['items'][0]['external_urls']['spotify']
+        #pprint.pprint('URL: ' + searchSongURL)
+    else:
+        searchSongName = 'none'
+        searchSongURL = 'none'
     return searchSongName, searchSongURL
 
-def searchForAlbum(albumName='Marshall Mathers'):
+def searchForAlbum(albumName):
     results = spotify.search(q=albumName, type='album')
-    searchAlbumName = results['albums']['items'][0]['name']
-    #pprint.pprint(results['albums']['items'][0]['name'])
-    searchAlbumURL = results['albums']['items'][0]['external_urls']['spotify']
-    #pprint.pprint(results['albums']['items'][0]['external_urls']['spotify'])
+    if results['albums']['items']:
+        searchAlbumName = results['albums']['items'][0]['name']
+        #pprint.pprint(results['albums']['items'][0]['name'])
+        searchAlbumURL = results['albums']['items'][0]['external_urls']['spotify']
+        #pprint.pprint(results['albums']['items'][0]['external_urls']['spotify'])
+    else:
+        searchAlbumName = 'none'
+        searchAlbumURL = 'none'
     return searchAlbumName, searchAlbumURL
 
 def tweetSearchForSong(status):
@@ -91,6 +101,37 @@ def tweetSearchForAlbum(status):
     searchAlbumName, searchAlbumURL = searchForAlbum(albumName)
     tweetBody = 'Here is ' + searchAlbumName + ' for you! ' + searchAlbumURL
     reply(tweetBody, status)
+
+def tweetRandomSong(status):
+    numberOfLetters = random.randint(1, 2)
+    numberOfSpaces = random.randint(1, 2)
+    vowels = 'aeiou'
+    searchString = ''
+    for i in range(numberOfSpaces):
+        for j in range(numberOfLetters):
+            searchString += random.choice(vowels)
+        searchString += ' '
+    randomOffset = str(random.randint(1, 1000))
+    results = spotify.search(q=searchString, offset=randomOffset, type='track')
+    # if no results then re-do
+    while not results['tracks']['items']:
+        searchString = ''
+        for i in range(numberOfSpaces):
+            for j in range(numberOfLetters):
+                searchString += random.choice(vowels)
+            searchString += ' '
+        randomOffset = str(random.randint(1, 1000))
+        results = spotify.search(q=searchString, offset=randomOffset, type='track')
+    # tweet back details
+    randomSongName = results['tracks']['items'][0]['name']
+    #pprint.pprint('Name: ' + searchSongName)
+    randomSongArtist = results['tracks']['items'][0]['artists'][0]['name']
+    #pprint.pprint(results['tracks']['items'][0]['artists']['name'])
+    randomSongURL = results['tracks']['items'][0]['external_urls']['spotify']
+    #pprint.pprint('URL: ' + searchSongURL)
+    tweetBody = 'Here is a random song for you! ' + randomSongName + ' by ' + randomSongArtist + ' ' + randomSongURL
+    reply(tweetBody, status)
+
 
 
 
@@ -130,6 +171,13 @@ def GrabThisSong(status):
     elif 'search for album' in tweetLower:
         print('Tweet includes "search for album"')
         tweetSearchForAlbum(status)
+    elif 'random song' in tweetLower:
+        print('Tweet includes "random song"')
+        tweetRandomSong(status)
+    else:
+        print('No target words in tweet')
+        tweetBody = 'For a full list of commands, please visit '
+        reply(tweetBody, status)
 
 
 ###########################
