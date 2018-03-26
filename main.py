@@ -176,7 +176,7 @@ def GrabThisSong(status):
         tweetRandomSong(status)
     else:
         print('No target words in tweet')
-        tweetBody = 'For a full list of commands, please visit '
+        tweetBody = 'For a full list of commands, please visit https://pastebin.com/SbCwp8Js'
         reply(tweetBody, status)
 
 
