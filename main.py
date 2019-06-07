@@ -22,10 +22,10 @@ GTS = tweepy.API(auth)
 #############
 ## Spotipy ##
 #############
-username = '12156140455'
+username = '**********'
 scope = ''
-client_id = '49ff0f2a990a4af2886eda66daeca7cf'
-client_secret = 'afc1335ebccc432381bd68acad5a7994'
+client_id = ''**********''
+client_secret = ''**********''
 redirect_uri = 'http://localhost/'
 
 """
